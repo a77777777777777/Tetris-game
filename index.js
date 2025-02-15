@@ -18,6 +18,12 @@ function initialize(){
     resetgridboxsize();createGrid(20,10);
 }
 
+document.getElementById("highscore").addEventListener("touchstart",function(event){
+    event.preventDefault(); showhighscore();
+});
+document.getElementById("reset").addEventListener("touchstart",function(event){
+    event.preventDefault(); reset();
+});
 document.getElementById("btnleft").addEventListener("touchstart",function(event){
     event.preventDefault(); moveleft();
 });
@@ -615,7 +621,7 @@ function timer(){
     
     timercount+=12;
 
-    if(timercount>=gamespeed){
+    if(timercount>=gamespeed){ 
         timercount=0;
         if(isobjectmoving) movedown();
         else createobject();
@@ -5676,6 +5682,8 @@ function animaterow(){
         }, 100);
     }else{
         gridrefresh();
+        gamespeed=700-(Math.floor(score/100)*10);
+        if(gamespeed<100) gamespeed=100;
         timerid=setInterval(timer,10);    
     }
 }
