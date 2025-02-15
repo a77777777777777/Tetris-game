@@ -1,0 +1,146 @@
+body {
+  text-align: center;
+  background-color: #99aead;
+  line-height: 1;
+  font-size: 1rem;
+  user-select: none;
+  margin: 0;
+}
+h1 {
+  font-size: 3.4rem;
+  margin:2px;
+  color: #ffffff;
+  font-family: "Arvo", cursive;
+  text-shadow: 3px 0 #747474;
+}
+footer {
+  color: #DBEDF3;
+  font-family: sans-serif;
+}
+#next{
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  margin:8px;
+  align-content: center;
+  justify-content: center;
+  border:4px dashed rgb(100, 99, 99);
+  height: 100px;
+  width: 100px;
+}
+#gamegrid {
+  margin-top: 8px;
+  display: grid;
+  border: 4px solid white;
+  border-radius: 4px;
+}
+.btnbox {
+  border: 1px solid white;
+  background-color: #7ecad3;
+ }
+ .gamepad{
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(122deg) brightness(103%) contrast(102%);
+  cursor: pointer;
+  background-color: #c0bfbf;
+  border-radius: 50px;
+  width: 57px;
+ }
+ .gamepad:hover{
+  background-color: #dbdbdb;
+  filter: invert(10%) sepia(0%) saturate(0%) hue-rotate(122deg) brightness(103%) contrast(102%);
+ }
+ #reset{
+  background-color: #08c5da;
+  color:rgb(255, 255, 255);
+  border:2px solid white;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 20px;
+  height: 40px;
+  width: 130px;
+  font-size: 20px;
+ }
+ .btnclass:hover{
+  color: black;
+  box-shadow: 0 0 3px black;
+ }
+ .previewbox{
+  height: 20px; width: 20px; border:2px solid white; background-color:#08c5da; 
+ }
+.theme1{
+  background-image: linear-gradient(to right, #0a3dd7 0%, #3f90fa  95%);
+}
+.theme2{
+  background-image: linear-gradient(to left, #ee1212 0%, #fa3f3f  95%);
+}
+.theme3{
+  background-image: linear-gradient(to right, #0ccc22 0%, #0ad021  95%);
+}
+.theme4{
+  background-image: linear-gradient(to right, #f30deb 0%, #ef0ef3  95%);
+}
+.theme5{
+  background-image: linear-gradient(to right,#dddddd 0%, #bbbbbb  95%);
+}
+.theme6{
+  background-image: linear-gradient(to right, #828282 0%, #606060  95%);
+}
+.theme7{
+  background-image: linear-gradient(to right, #c3f14d 0%, #a6fa3f  95%);
+}
+.theme8{
+  background-image: linear-gradient(to right, #8b0df3 0%, #ab0ef3  95%);
+}
+.blue{
+  background-color:  #3f90fa;
+}
+.red{
+  background-color:#fa3f3f;
+}
+.green{
+  background-color:#3ffa55;
+}
+.purp{
+  background-color:#f73ffa;
+}
+.violet{
+  background-color:#9c3ffa;
+}
+.white{
+  background-color: #d9d9d9;
+}
+.black{
+  background-color: #606060;
+}
+.greenlight{
+  background-color:#acfa3f;
+}
+#message{
+  position: absolute;
+  text-align: center;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  text-shadow: 2px 0 4px black;
+  color:white;
+}
+.score{
+  color:white;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 40px;
+}
+.themebtn{
+  height: 25px;
+  width: 25px;
+  margin:4px 8px 4px 8px;
+  border-radius: 25px;
+  border: 2px solid rgb(229, 227, 227);
+  background-size: 160%;
+  cursor: pointer;
+}
+.themebtn:hover{
+  box-shadow: 0 0 14px white;
+  filter:brightness(130%);
+}
+.activebtn{
+  box-shadow: 0 0 10px white;
+  filter:brightness(130%);
+}
