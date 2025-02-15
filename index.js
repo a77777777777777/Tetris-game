@@ -1,7 +1,7 @@
 var timerid=0,timercount=0,gamespeed;
 var rowcompletestart,rowcompleteend,animatecount; var isrowanimatecomplete;
-var currenttheme,themecode="blue";
-var isStarted,isobjectmoving,nextobject,currentobject=1,currentangle,currentrow,currentcolumn;
+var currenttheme,themecode="All";
+var isStarted,isobjectmoving,nextobject=1,currentobject=1,currentangle,currentrow,currentcolumn;
 var score;
 var touchcount=0;
 var size;
@@ -17,6 +17,23 @@ function initialize(){
     isStarted=false,isobjectmoving=false;
     resetgridboxsize();createGrid(20,10);
 }
+
+document.getElementById("btnleft").addEventListener("touchstart",function(event){
+    event.preventDefault(); moveleft();
+});
+document.getElementById("btnright").addEventListener("touchstart",function(event){
+    event.preventDefault(); moveright();
+});
+document.getElementById("btncc").addEventListener("touchstart",function(event){
+    event.preventDefault(); rotatecc();
+});
+document.getElementById("btncw").addEventListener("touchstart",function(event){
+    event.preventDefault(); rotatecw();
+});
+document.getElementById("btndown").addEventListener("touchstart",function(event){
+    event.preventDefault(); movedown();
+});
+
 
 document.getElementById("gamegrid").addEventListener("dblclick",function(event){
     event.preventDefault();
@@ -38,11 +55,9 @@ document.addEventListener("contextmenu",(e)=>{e.preventDefault();});
 document.getElementById("gamegrid").addEventListener("touchstart",function(e){
     e.preventDefault();
     touchcount=1;
-    this.document.getElementById("footer").innerText=e.toString();
 });
 document.getElementById("gamegrid").addEventListener("touchmove",function(e){
     e.preventDefault();
-    this.document.getElementById("footer").innerText+=e.toString();
 });
 document.getElementById("gamegrid").addEventListener("touchend",function(e){
     e.preventDefault();
@@ -84,7 +99,15 @@ window.addEventListener("keydown",(event)=>{
 
 function resetgridboxsize(){
     if(window.innerHeight>window.innerWidth){
-        size=window.innerWidth; size=Math.floor(size*92/100);
+        size=window.innerWidth; size=Math.floor(size*94/100);
+    if(navigator.userAgent.includes("Android") || navigator.userAgent.includes("Mobile")){ 
+        console.log(navigator.userAgent)
+        document.getElementById("btnleft").style.width=Math.floor(size*0.7/5)+"px";
+        document.getElementById("btnright").style.width=Math.floor(size*0.7/5)+"px";
+        document.getElementById("btncc").style.width=Math.floor(size*0.7/5)+"px";
+        document.getElementById("btncw").style.width=Math.floor(size*0.7/5)+"px";
+        document.getElementById("btndown").style.width=Math.floor(size*0.7/5)+"px";
+    }
     }else{
         size=window.innerHeight; size=Math.floor(size*82/100);
     }
@@ -143,6 +166,441 @@ function changetheme(themeid){
         document.getElementById(themecode).classList.remove("activebtn");
         themecode=themeid;
         document.getElementById(themecode).classList.add("activebtn");
+        if(themeid==="All"){
+            for(var a=0;a<20;a++) for(var b=0;b<10;b++){
+                if(!document.getElementById(a+","+b).disabled){ 
+                    if(themegrid[a][b].length>1){ 
+                        removetheme(a,b);
+                        document.getElementById(a+","+b).classList.add(themegrid[a][b]);
+                    }
+                }
+            }
+            if(isobjectmoving){
+
+                if(currentobject===7){// |-
+                    if(currentangle===1){
+                        if(currentrow===0){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme); 
+                        }else if(currentrow===1){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else{
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn)); document.getElementById((currentrow-2)+","+(currentcolumn)).classList.add(currenttheme);
+                        }
+                    }else if(currentangle===2){ // T
+                        if(currentrow===0){
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            }
+                        }else{
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+2)); document.getElementById((currentrow-1)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn-1)); document.getElementById((currentrow-1)+","+(currentcolumn-1)).classList.add(currenttheme);
+                            }
+                        }
+                    }else if(currentangle===3){ // -|
+                        if(currentrow===0){
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }else if(currentrow===1){
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else{
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1));document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn));document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn+1)); document.getElementById((currentrow-2)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }
+                    }else{ // _|_
+                        if(currentrow===0){
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1));document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2));document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                            }
+                        }else{
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            }
+                        }
+                    }
+                }else if(currentobject===6){// |\
+                    if(currentangle===1){
+                        if(currentrow===0){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else if(currentrow===1){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else{
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn+1)); document.getElementById((currentrow-2)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }
+                    }else{ // -_
+                        if(currentrow===0){
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }
+                        }else{
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn-1)); document.getElementById((currentrow-1)+","+(currentcolumn-1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            }
+                        }
+                    }
+                }else if(currentobject===5){// /|
+                    if(currentangle===1){
+                        if(currentrow===0){
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }else if(currentrow===1){
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else{
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn)); document.getElementById((currentrow-2)+","+(currentcolumn)).classList.add(currenttheme);
+                        }
+                    }else{ // _-
+                        if(currentrow===0){
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+2)); document.getElementById((currentrow-1)+","+(currentcolumn+2)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            }
+                        }else{
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            }
+                        }
+                    }
+                    
+                }else if(currentobject===4){// _|
+                    if(currentangle===1){
+                        if(currentrow===0){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }else if(currentrow===1){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }else{
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn+1)); document.getElementById((currentrow-2)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }
+                    }else if(currentangle===2){ // |__
+                        if(currentrow===0){
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                            }
+                        }else{
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn-1)); document.getElementById((currentrow-1)+","+(currentcolumn-1)).classList.add(currenttheme);
+                            }
+                        }
+                    }else if(currentangle===3){ // |¯
+                        if(currentrow===0){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else if(currentrow===1){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else{
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn)); document.getElementById((currentrow-2)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn+1)); document.getElementById((currentrow-2)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }
+                    }else{ // ¯¯¯|
+                        if(currentrow===0){
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            }
+                        }else{
+                            if(currentcolumn===0){
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+2)); document.getElementById((currentrow-1)+","+(currentcolumn+2)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn-1)); document.getElementById((currentrow-1)+","+(currentcolumn-1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            }
+                        }
+                    }
+                    
+                }else if(currentobject===3){// |_
+                    if(currentangle===1){
+                        if(currentrow===0){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }else if(currentrow===1){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else{
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn)); document.getElementById((currentrow-2)+","+(currentcolumn)).classList.add(currenttheme);
+                        }
+                    }else if(currentangle===2){ // |¯¯¯
+                        if(currentrow===0){
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                            }
+                        }else{
+                            if(currentcolumn===0){
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+2)); document.getElementById((currentrow-1)+","+(currentcolumn+2)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn-1)); document.getElementById((currentrow-1)+","+(currentcolumn-1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                            }
+                        }
+                    }else if(currentangle===3){ // ¯|
+                        if(currentrow===0){
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }else if(currentrow===1){
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }else{
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn)); document.getElementById((currentrow-2)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn+1)); document.getElementById((currentrow-2)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }
+                    }else{ // __|
+                        if(currentrow===0){
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                            }
+                        }else{
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+2)); document.getElementById((currentrow-1)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            }
+                        }
+                    }
+                    
+                }else if(currentobject===2){// |+|
+                    if(currentrow===0){
+                        removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                    }else{
+                        removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                    }
+                }else if(currentobject===1){//----
+                  if(currentangle===1){
+                    if(currentcolumn===0){
+                        removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn+3)); document.getElementById((currentrow)+","+(currentcolumn+3)).classList.add(currenttheme);
+                    }else if(currentcolumn===8){
+                        removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn-2)); document.getElementById((currentrow)+","+(currentcolumn-2)).classList.add(currenttheme);
+                    }else if(currentcolumn===9){
+                        removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn-3)); document.getElementById((currentrow)+","+(currentcolumn-3)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn-2)); document.getElementById((currentrow)+","+(currentcolumn-2)).classList.add(currenttheme);
+                    }else{
+                        removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn+2));document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                        removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                    }
+                  }else{
+                    if(currentrow===0){
+                        removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                    }else if(currentrow===1){
+                        removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                    }else if(currentrow===2){
+                        removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow-2),(currentcolumn)); document.getElementById((currentrow-2)+","+(currentcolumn)).classList.add(currenttheme);
+                    }else{
+                        removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow-2),(currentcolumn)); document.getElementById((currentrow-2)+","+(currentcolumn)).classList.add(currenttheme);
+                        removetheme((currentrow-3),(currentcolumn)); document.getElementById((currentrow-3)+","+(currentcolumn)).classList.add(currenttheme);
+                    }
+                  }
+                }else{// -|
+                    if(currentangle===1){
+                        if(currentrow===0){
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }else if(currentrow===1){
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else{
+                            removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn+1)); document.getElementById((currentrow-2)+","+(currentcolumn+1)).classList.add(currenttheme);
+                        }
+                    }else if(currentangle===2){ //  _|_
+                        if(currentrow===0){
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                            }
+                        }else{
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+2)); document.getElementById((currentrow)+","+(currentcolumn+2)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow),(currentcolumn-1)); document.getElementById((currentrow)+","+(currentcolumn-1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            }
+                        }
+                    
+                    }else if(currentangle===3){ // |-
+                        if(currentrow===0){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else if(currentrow===1){
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                        }else{
+                            removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                            removetheme((currentrow-2),(currentcolumn)); document.getElementById((currentrow-2)+","+(currentcolumn)).classList.add(currenttheme);
+                        }
+                    }else{ // T
+                        if(currentrow===0){
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                            }
+                        }else{
+                            if(currentcolumn===0){
+                                removetheme((currentrow),(currentcolumn+1)); document.getElementById((currentrow)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+2)); document.getElementById((currentrow-1)+","+(currentcolumn+2)).classList.add(currenttheme);
+                            }else{
+                                removetheme((currentrow),(currentcolumn)); document.getElementById((currentrow)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn+1)); document.getElementById((currentrow-1)+","+(currentcolumn+1)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn)); document.getElementById((currentrow-1)+","+(currentcolumn)).classList.add(currenttheme);
+                                removetheme((currentrow-1),(currentcolumn-1)); document.getElementById((currentrow-1)+","+(currentcolumn-1)).classList.add(currenttheme);
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            currenttheme=themeid;
+            for(var a=0;a<20;a++) for(var b=0;b<10;b++){ 
+                if(!document.getElementById(a+","+b).disabled){ removetheme(a,b); document.getElementById(a+","+b).classList.add(themeid);}
+            }
+        }
     }
 
 }
@@ -264,7 +722,7 @@ function shownextobject(id){
 }
 
 function rotatecc(){
-    if(!isobjectmoving)return;
+    if(!isobjectmoving || timerid===0)return;
     if(currentobject===7){// |-
         if(currentangle===1){
 
@@ -333,7 +791,7 @@ function rotatecc(){
 }
 
 function rotatecw(){
-    if(!isobjectmoving)return;
+    if(!isobjectmoving || timerid===0)return;
     if(currentobject===7){// |-
         if(currentangle===1){
             if(currentcolumn===0){
@@ -2234,7 +2692,7 @@ function rotatecw(){
 }
 
 function moveright(){
-    if(currentcolumn===9 || !isobjectmoving)return;
+    if(currentcolumn===9 || !isobjectmoving || timerid===0)return;
     if(currentobject===7){// |-
         if(currentangle===1){ if(currentcolumn===8)return;
             if(currentrow===0){
@@ -3225,7 +3683,7 @@ function moveright(){
 }
 
 function moveleft(){
-    if(currentcolumn===0 || !isobjectmoving) return;
+    if(currentcolumn===0 || !isobjectmoving || timerid===0) return;
     if(currentobject===7){// |-
         if(currentangle===1){
             if(currentrow===0){
@@ -3967,7 +4425,7 @@ function moveleft(){
     }
 }
 
-function movedown(){ if(!isobjectmoving)return;
+function movedown(){ if(!isobjectmoving || timerid===0)return;
     if(currentrow===19){
         clearInterval(timerid);
         isobjectmoving=false; 
@@ -4629,6 +5087,7 @@ function storetheme(){
                     themegrid[currentrow][currentcolumn]=currenttheme;
                     themegrid[currentrow][currentcolumn+1]=currenttheme;
                     themegrid[currentrow][currentcolumn+2]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+1]=currenttheme;
                 }else{
                     themegrid[currentrow][currentcolumn]=currenttheme;
                     themegrid[currentrow][currentcolumn+1]=currenttheme;
@@ -4639,47 +5098,274 @@ function storetheme(){
         }
     }else if(currentobject===6){// |\
         if(currentangle===1){
-            
+            if(currentrow===0){
+                themegrid[currentrow][currentcolumn]=currenttheme;
+            }else if(currentrow===1){
+                themegrid[currentrow][currentcolumn]=currenttheme;
+                themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn]=currenttheme;
+            }else{
+                themegrid[currentrow][currentcolumn]=currenttheme;
+                themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn]=currenttheme;
+                themegrid[currentrow-2][currentcolumn+1]=currenttheme;
+            }
         }else{ // -_
-
+            if(currentrow===0){
+                if(currentcolumn===0){
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn+2]=currenttheme;
+                }else{
+                    themegrid[currentrow-1][currentcolumn]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn+2]=currenttheme;
+                }
+            }else{
+                if(currentcolumn===0){
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                }else{
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn-1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn]=currenttheme;
+                }
+            }
         }
-        
     }else if(currentobject===5){// /|
         if(currentangle===1){
-            
+            if(currentrow===0){
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+            }else if(currentrow===1){
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn]=currenttheme;
+            }else{
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn]=currenttheme;
+                themegrid[currentrow-2][currentcolumn]=currenttheme;
+            }
         }else{ // _-
-
+            if(currentrow===0){
+                if(currentcolumn===0){
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                }else{
+                    themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+2]=currenttheme;
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                }
+            }else{
+                if(currentcolumn===0){
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn-1]=currenttheme;
+                }else{
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn-1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn]=currenttheme;
+                }
+            }
         }
         
     }else if(currentobject===4){// _|
         if(currentangle===1){
-            
+            if(currentrow===0){
+                themegrid[currentrow][currentcolumn]=currenttheme;
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+            }else if(currentrow===1){
+                themegrid[currentrow][currentcolumn]=currenttheme;
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+            }else{
+                themegrid[currentrow][currentcolumn]=currenttheme;
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-2][currentcolumn+1]=currenttheme;
+            }
         }else if(currentangle===2){ // |__
-
-        }else if(currentangle===3){ // |¯¯
-
+            if(currentrow===0){
+                if(currentcolumn===0){
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn+2]=currenttheme;
+                }else{
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn-1]=currenttheme;
+                }
+            }else{
+                if(currentcolumn===0){
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn+2]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn]=currenttheme;
+                }else{
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn-1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn-1]=currenttheme;
+                }
+            }
+        }else if(currentangle===3){ // |¯
+            if(currentrow===0){
+                themegrid[currentrow][currentcolumn]=currenttheme;
+            }else if(currentrow===1){
+                themegrid[currentrow][currentcolumn]=currenttheme;
+                themegrid[currentrow-1][currentcolumn]=currenttheme;
+            }else{
+                themegrid[currentrow][currentcolumn]=currenttheme;
+                themegrid[currentrow-1][currentcolumn]=currenttheme;
+                themegrid[currentrow-2][currentcolumn]=currenttheme;
+                themegrid[currentrow-2][currentcolumn+1]=currenttheme;
+            }
         }else{ // ¯¯¯|
-
+            if(currentrow===0){
+                if(currentcolumn===0){
+                    themegrid[currentrow][currentcolumn+2]=currenttheme;
+                }else{
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                }
+            }else{
+                if(currentcolumn===0){
+                    themegrid[currentrow-1][currentcolumn]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+2]=currenttheme;
+                    themegrid[currentrow][currentcolumn+2]=currenttheme;
+                }else{
+                    themegrid[currentrow-1][currentcolumn]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn-1]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                }
+            }
         }
         
     }else if(currentobject===3){// |_
         if(currentangle===1){
-            
+            if(currentrow===0){
+                themegrid[currentrow][currentcolumn]=currenttheme;
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+            }else if(currentrow===1){
+                themegrid[currentrow][currentcolumn]=currenttheme;
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn]=currenttheme;
+            }else{
+                themegrid[currentrow][currentcolumn]=currenttheme;
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn]=currenttheme;
+                themegrid[currentrow-2][currentcolumn]=currenttheme;
+            }
         }else if(currentangle===2){ // |¯¯¯
-
+            if(currentrow===0){
+                if(currentcolumn===0){
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                }else{
+                    themegrid[currentrow][currentcolumn-1]=currenttheme;
+                }
+            }else{
+                if(currentcolumn===0){
+                    themegrid[currentrow-1][currentcolumn]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+2]=currenttheme;
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                }else{
+                    themegrid[currentrow-1][currentcolumn]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn-1]=currenttheme;
+                    themegrid[currentrow][currentcolumn-1]=currenttheme;
+                }
+            }
         }else if(currentangle===3){ // ¯|
-
+            if(currentrow===0){
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+            }else if(currentrow===1){
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+            }else{
+                themegrid[currentrow][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                themegrid[currentrow-2][currentcolumn]=currenttheme;
+                themegrid[currentrow-2][currentcolumn+1]=currenttheme;
+            }
         }else{ // __|
-
+            if(currentrow===0){
+                if(currentcolumn===0){
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn+2]=currenttheme;
+                }else{
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn-1]=currenttheme;
+                }
+            }else{
+                if(currentcolumn===0){
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn+2]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+2]=currenttheme;
+                }else{
+                    themegrid[currentrow][currentcolumn]=currenttheme;
+                    themegrid[currentrow][currentcolumn+1]=currenttheme;
+                    themegrid[currentrow][currentcolumn-1]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+                }
+            }
         }
         
     }else if(currentobject===2){// |+|
-        
+        if(currentrow===0){
+            themegrid[currentrow][currentcolumn]=currenttheme;
+            themegrid[currentrow][currentcolumn+1]=currenttheme;
+        }else{
+            themegrid[currentrow][currentcolumn]=currenttheme;
+            themegrid[currentrow-1][currentcolumn+1]=currenttheme;
+            themegrid[currentrow-1][currentcolumn]=currenttheme;
+            themegrid[currentrow][currentcolumn+1]=currenttheme;
+        }
     }else if(currentobject===1){//----
       if(currentangle===1){
-
+        if(currentcolumn===0){
+            themegrid[currentrow][currentcolumn]=currenttheme;
+            themegrid[currentrow][currentcolumn+1]=currenttheme;
+            themegrid[currentrow][currentcolumn+2]=currenttheme;
+            themegrid[currentrow][currentcolumn+3]=currenttheme;
+        }else if(currentcolumn===8){
+            themegrid[currentrow][currentcolumn]=currenttheme;
+            themegrid[currentrow][currentcolumn+1]=currenttheme;
+            themegrid[currentrow][currentcolumn-1]=currenttheme;
+            themegrid[currentrow][currentcolumn-2]=currenttheme;
+        }else if(currentcolumn===9){
+            themegrid[currentrow][currentcolumn]=currenttheme;
+            themegrid[currentrow][currentcolumn-3]=currenttheme;
+            themegrid[currentrow][currentcolumn-1]=currenttheme;
+            themegrid[currentrow][currentcolumn-2]=currenttheme;
+        }else{
+            themegrid[currentrow][currentcolumn]=currenttheme;
+            themegrid[currentrow][currentcolumn+1]=currenttheme;
+            themegrid[currentrow][currentcolumn+2]=currenttheme;
+            themegrid[currentrow][currentcolumn-1]=currenttheme;
+        }
       }else{
-        
+        if(currentrow===0){
+            themegrid[currentrow][currentcolumn]=currenttheme;
+        }else if(currentrow===1){
+            themegrid[currentrow][currentcolumn]=currenttheme;
+            themegrid[currentrow-1][currentcolumn]=currenttheme;
+        }else if(currentrow===2){
+            themegrid[currentrow][currentcolumn]=currenttheme;
+            themegrid[currentrow-1][currentcolumn]=currenttheme;
+            themegrid[currentrow-2][currentcolumn]=currenttheme;
+        }else{
+            themegrid[currentrow][currentcolumn]=currenttheme;
+            themegrid[currentrow-1][currentcolumn]=currenttheme;
+            themegrid[currentrow-2][currentcolumn]=currenttheme;
+            themegrid[currentrow-3][currentcolumn]=currenttheme;
+        }
       }
     }else{// -|
         if(currentangle===1){
@@ -4711,6 +5397,7 @@ function storetheme(){
                     themegrid[currentrow][currentcolumn]=currenttheme;
                     themegrid[currentrow][currentcolumn+1]=currenttheme;
                     themegrid[currentrow][currentcolumn+2]=currenttheme;
+                    themegrid[currentrow-1][currentcolumn+1]=currenttheme;
                 }else{
                     themegrid[currentrow][currentcolumn]=currenttheme;
                     themegrid[currentrow][currentcolumn+1]=currenttheme;
@@ -4884,6 +5571,7 @@ function reset(){
         document.getElementById("score").innerText="0";
         currentkey="";keycount=10;isobjectmoving=false;
         clearGrid();
+        hidenextobject(nextobject);
         nextobject=Math.ceil(Math.random()*8);
         hidenextobject(currentobject);
         shownextobject(nextobject);
@@ -5010,4 +5698,3 @@ function gettheme(id){
  else if(id===6) return "greenlight";
  else if(id===7) return "black";
 }
-

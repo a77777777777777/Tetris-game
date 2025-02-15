@@ -69,9 +69,15 @@ var newhighscore=0,scoreboardsize=10;
     background-color: #01d6cb;
     color:#fffbf4;
   }
+  .closebtn{
+    cursor: pointer;margin-right: 5px;
+  }
+  .closebtn:hover{
+    font-weight: bold;
+  }
   .hstitle{
     display: flex; padding: 3px; overflow:hidden; text-wrap:nowrap; border-radius: 5px; cursor: pointer;
-    justify-content: space-between; align-items: center;
+    justify-content: space-between; align-items: center;backdrop-filter: brightness(104%);
   }
   .hstitle:hover{ backdrop-filter: brightness(110%); }
   #scoreboard{
@@ -85,14 +91,14 @@ var newhighscore=0,scoreboardsize=10;
   .scorerow:hover{ filter: brightness(110%); }
 </style>
 <body>
-
+  
 <div id="loading"><div id="loadingbox" style="position: absolute;top:43vh;left:49vw;">
   <div style="border-radius: 50px;border:10px solid rgb(25, 83, 255);height: 14px;width: 14px;"><div class="geartooth" style="top:-16px;left:13px;"></div><div class="geartooth" style="top:-8px;left:34px;rotate: -45deg;"></div><div class="geartooth" style="top:-7px;left:-9px;rotate: -45deg;"></div><div class="geartooth" style="top:14px;left:-17px;"></div><div class="geartooth" style="top:14px;left:42px;"></div><div class="geartooth" style="top:34px;left:-8px;rotate: -45deg;"></div><div class="geartooth" style="top:34px;left:34px;rotate: -45deg;"></div><div class="geartooth" style="top:41.8px;left:13px;"></div>
 </div></div></div>
 
 <div id="hsnameinput" style="display: none;position: absolute; z-index: 101; height: 100vh;user-select: none; width: 100vw;background-color: rgba(0, 0, 0, 0.097);color:white;font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
   <div id="hsnameinputdialog" class="hsbackground" style="position:absolute; width:340px; height:160px;left:34%;top:34%;border-radius: 4px;">
-    <div style="display: flex;justify-content: space-between;backdrop-filter: brightness(50%);height: 22px;align-items: center;"><div>&nbsp;Enter your Name</div><div style="cursor: pointer;margin-right: 5px;"><a onclick="savescore('hsnameinput')">X</a></div></div>
+    <div style="display: flex;justify-content: space-between;backdrop-filter: brightness(50%);height: 22px;align-items: center;border-top-right-radius: 4px;border-top-left-radius: 4px;"><div>&nbsp;Enter your Name</div><div class="closebtn"><a onclick="savescore('hsnameinput')">X</a></div></div>
     <div style="display: grid; grid-template-columns: 100%;justify-content: center;">
       <div style="display: flex;justify-content: center;margin-top: 20px;align-items: center;"><div style="color:white;font-size: 20px;">Name:&nbsp;&nbsp;</div><input id="hsname" class="controls" type="text" value="User" style="width: 200px;height:30px;border-radius: 4px;font-size: 25px;"/></div>
       <div style="display: flex;justify-content: center;"><button class="controls" style="width: 110px;margin:25px;height: 30px;" onclick="savescore('hsnameinput')">Ok</button></div>
@@ -164,19 +170,19 @@ var newhighscore=0,scoreboardsize=10;
     <div id="score" class="score">0</div>
     <div style="margin:7px;margin-top: 30px;border-radius:10px;display:flex;flex-direction: column; align-items: center; justify-content: center; border:1px dashed rgb(0, 255, 255); padding: 5px;">
       <div style="display: flex;">
-        <div id="red" class="themebtn theme2" onclick="changetheme('red')"></div>
-        <div id="green" class="themebtn theme3" onclick="changetheme('green')"></div>
-        <div id="blue" class="themebtn theme1" onclick="changetheme('blue')"></div>
+        <div id="red" class="themebtn theme2" ontouchstart="changetheme('red')" onclick="changetheme('red')"></div>
+        <div id="green" class="themebtn theme3" ontouchstart="changetheme('green')" onclick="changetheme('green')"></div>
+        <div id="blue" class="themebtn theme1" ontouchstart="changetheme('blue')" onclick="changetheme('blue')"></div>
       </div>
       <div style="display: flex;">
-        <div id="white" class="themebtn theme5" onclick="changetheme('white')"></div>
-        <div id="black" class="themebtn theme6" onclick="changetheme('black')"></div>
-        <div id="violet" class="themebtn theme8" onclick="changetheme('violet')"></div>
+        <div id="white" class="themebtn theme5" ontouchstart="changetheme('white')" onclick="changetheme('white')"></div>
+        <div id="black" class="themebtn theme6" ontouchstart="changetheme('black')" onclick="changetheme('black')"></div>
+        <div id="violet" class="themebtn theme8" ontouchstart="changetheme('violet')" onclick="changetheme('violet')"></div>
       </div>
       <div style="display: flex;">
-        <div id="purp" class="themebtn theme4" onclick="changetheme('purp')"></div>
-        <div id="greenlight" class="themebtn theme7" onclick="changetheme('greenlight')"></div>
-        <div id="All" class="themebtn activebtn" onclick="changetheme('All')" style="display:flex;align-items: center; justify-content: center;""><div style="color:white;font-family: Verdana, Geneva, Tahoma, sans-serif;">All</div></div>
+        <div id="purp" class="themebtn theme4" ontouchstart="changetheme('purp')" onclick="changetheme('purp')"></div>
+        <div id="greenlight" class="themebtn theme7" ontouchstart="changetheme('greenlight')" onclick="changetheme('greenlight')"></div>
+        <div id="All" class="themebtn activebtn" ontouchstart="changetheme('All')" onclick="changetheme('All')" style="display:flex;align-items: center; justify-content: center;""><div style="color:white;font-family: Verdana, Geneva, Tahoma, sans-serif;">All</div></div>
       </div>
     </div>
   </div>
@@ -184,11 +190,11 @@ var newhighscore=0,scoreboardsize=10;
 </div>
 
 <div style="display: flex;gap:20px;justify-content: center;margin-top: 15px;">
-  <svg xmlns="http://www.w3.org/2000/svg" onclick="moveleft()" class="gamepad" style="rotate:-90deg;box-shadow: 4px 0 5px #747474;" viewBox="0 0 512 512"><polyline points="176 249.38 256 170 336 249.38" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><line x1="256" y1="181.03" x2="256" y2="342" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M448,256c0-106-86-192-192-192S64,150,64,256s86,192,192,192S448,362,448,256Z" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:32px"/></svg>
-  <svg xmlns="http://www.w3.org/2000/svg" onclick="rotatecw()" class="gamepad" style="box-shadow:0 -4px 5px #747474;" viewBox="0 0 512 512"><path d="M288,193s12.18-6-32-6a80,80,0,1,0,80,80" style="fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:28px"/><polyline points="256 149 296 189 256 229" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:28px"/><path d="M256,64C150,64,64,150,64,256s86,192,192,192,192-86,192-192S362,64,256,64Z" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:32px"/></svg>
-  <svg xmlns="http://www.w3.org/2000/svg" onclick="movedown()" class="gamepad" style="transform: scale(1,-1);box-shadow: -4px 0 5px #747474;" viewBox="0 0 512 512"><polyline points="176 249.38 256 170 336 249.38" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><line x1="256" y1="181.03" x2="256" y2="342" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M448,256c0-106-86-192-192-192S64,150,64,256s86,192,192,192S448,362,448,256Z" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:32px"/></svg>
-<svg xmlns="http://www.w3.org/2000/svg" onclick="rotatecc()" class="gamepad" style="transform: scale(-1,1);box-shadow:0 -4px 5px #747474;" viewBox="0 0 512 512"><path d="M288,193s12.18-6-32-6a80,80,0,1,0,80,80" style="fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:28px"/><polyline points="256 149 296 189 256 229" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:28px"/><path d="M256,64C150,64,64,150,64,256s86,192,192,192,192-86,192-192S362,64,256,64Z" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:32px"/></svg>
-  <svg xmlns="http://www.w3.org/2000/svg" onclick="moveright()" class="gamepad" style="rotate:90deg;box-shadow: -4px 0 5px #747474;" viewBox="0 0 512 512"><polyline points="176 249.38 256 170 336 249.38" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><line x1="256" y1="181.03" x2="256" y2="342" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M448,256c0-106-86-192-192-192S64,150,64,256s86,192,192,192S448,362,448,256Z" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:32px"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" id="btnleft" onclick="moveleft()" class="gamepad" style="rotate:-90deg;box-shadow: 4px 0 5px #747474;" viewBox="0 0 512 512"><polyline points="176 249.38 256 170 336 249.38" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><line x1="256" y1="181.03" x2="256" y2="342" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M448,256c0-106-86-192-192-192S64,150,64,256s86,192,192,192S448,362,448,256Z" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:32px"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" id="btncw" onclick="rotatecw()" class="gamepad" style="box-shadow:0 -4px 5px #747474;" viewBox="0 0 512 512"><path d="M288,193s12.18-6-32-6a80,80,0,1,0,80,80" style="fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:28px"/><polyline points="256 149 296 189 256 229" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:28px"/><path d="M256,64C150,64,64,150,64,256s86,192,192,192,192-86,192-192S362,64,256,64Z" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:32px"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" id="btndown" onclick="movedown()" class="gamepad" style="transform: scale(1,-1);box-shadow: -4px 0 5px #747474;" viewBox="0 0 512 512"><polyline points="176 249.38 256 170 336 249.38" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><line x1="256" y1="181.03" x2="256" y2="342" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M448,256c0-106-86-192-192-192S64,150,64,256s86,192,192,192S448,362,448,256Z" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:32px"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" id="btncc" onclick="rotatecc()" class="gamepad" style="transform: scale(-1,1);box-shadow:0 -4px 5px #747474;" viewBox="0 0 512 512"><path d="M288,193s12.18-6-32-6a80,80,0,1,0,80,80" style="fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:28px"/><polyline points="256 149 296 189 256 229" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:28px"/><path d="M256,64C150,64,64,150,64,256s86,192,192,192,192-86,192-192S362,64,256,64Z" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:32px"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" id="btnright" onclick="moveright()" class="gamepad" style="rotate:90deg;box-shadow: -4px 0 5px #747474;" viewBox="0 0 512 512"><polyline points="176 249.38 256 170 336 249.38" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><line x1="256" y1="181.03" x2="256" y2="342" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M448,256c0-106-86-192-192-192S64,150,64,256s86,192,192,192S448,362,448,256Z" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:32px"/></svg>
 </div>
 
 <script src="index.js"></script></body></html>
