@@ -18,6 +18,9 @@ function initialize(){
     resetgridboxsize();createGrid(20,10);
 }
 
+document.getElementById("hsokbtn").addEventListener("touchstart",function(event){
+    event.preventDefault(); savescore('hsnameinput');
+});
 document.getElementById("highscore").addEventListener("touchstart",function(event){
     event.preventDefault(); showhighscore();
 });
@@ -108,11 +111,12 @@ function resetgridboxsize(){
         size=window.innerWidth; size=Math.floor(size*94/100);
     if(navigator.userAgent.includes("Android") || navigator.userAgent.includes("Mobile")){ 
         console.log(navigator.userAgent)
-        document.getElementById("btnleft").style.width=Math.floor(size*0.7/5)+"px";
-        document.getElementById("btnright").style.width=Math.floor(size*0.7/5)+"px";
-        document.getElementById("btncc").style.width=Math.floor(size*0.7/5)+"px";
-        document.getElementById("btncw").style.width=Math.floor(size*0.7/5)+"px";
-        document.getElementById("btndown").style.width=Math.floor(size*0.7/5)+"px";
+        document.getElementById("btnleft").style.width=Math.floor(size*0.77/5)+"px";
+        document.getElementById("btnright").style.width=Math.floor(size*0.77/5)+"px";
+        document.getElementById("btncc").style.width=Math.floor(size*0.77/5)+"px";
+        document.getElementById("btncw").style.width=Math.floor(size*0.77/5)+"px";
+        document.getElementById("btndown").style.width=Math.floor(size*0.77/5)+"px";
+        size=window.innerWidth; size=Math.floor(size*97/100);
     }
     }else{
         size=window.innerHeight; size=Math.floor(size*82/100);
