@@ -17,8 +17,13 @@ var newhighscore=0,scoreboardsize=10;
       document.getElementById("scoreboarddisplay").style.display="";
       document.getElementById("hscaret").style.transform="rotate(90deg)";
       document.getElementById("scoreboarddisplay").style.top=document.getElementById("highscore").offsetTop+document.getElementById("highscore").offsetHeight-3+"px";
+      document.getElementById("reset").style.marginTop=document.getElementById("scoreboarddisplay").offsetHeight+"px";
+      document.getElementById("scoreboarddisplay").style.left=document.getElementById("highscore").offsetLeft+"px";
     }
-    else {document.getElementById("scoreboarddisplay").style.display="none";}
+    else {
+      document.getElementById("scoreboarddisplay").style.display="none";
+      document.getElementById("reset").style.marginTop="0px";
+  }
   }
   function shownameinputdialog(score){
     newhighscore=score; document.getElementById("hsnameinput").style.display="";
@@ -62,12 +67,12 @@ var newhighscore=0,scoreboardsize=10;
 </script>
 <style>
   #highscore{
-    width:160px; position: relative; border-radius: 5px; user-select: none; margin-top: 8px; margin-right: 4px;  height: 30px; box-shadow: 0 0 4px rgba(0, 0, 0, 0.152);
+    position: relative; border-radius: 5px; user-select: none; margin-top: 8px; margin-right: 4px;  height: 30px; box-shadow: 0 0 4px rgba(0, 0, 0, 0.152);
     font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   .hsbackground{
     background-color: #01d6cb;
-    color:#fffbf4;
+    color:#fffbf4;width:160px;
   }
   .closebtn{
     cursor: pointer;margin-right: 5px;
@@ -96,6 +101,12 @@ var newhighscore=0,scoreboardsize=10;
   <div style="border-radius: 50px;border:10px solid rgb(25, 83, 255);height: 14px;width: 14px;"><div class="geartooth" style="top:-16px;left:13px;"></div><div class="geartooth" style="top:-8px;left:34px;rotate: -45deg;"></div><div class="geartooth" style="top:-7px;left:-9px;rotate: -45deg;"></div><div class="geartooth" style="top:14px;left:-17px;"></div><div class="geartooth" style="top:14px;left:42px;"></div><div class="geartooth" style="top:34px;left:-8px;rotate: -45deg;"></div><div class="geartooth" style="top:34px;left:34px;rotate: -45deg;"></div><div class="geartooth" style="top:41.8px;left:13px;"></div>
 </div></div></div>
 
+<div id="scoreboarddisplay" class="hsbackground" style="display: none;height:auto; border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;position:absolute;"><div id="hsscoreboard" style="backdrop-filter: brightness(62.3%) hue-rotate(19deg) sepia(3%);">
+  <div id="scorerow1" class="scorerow"><div id="name1">1.User1</div><div id="score1" style="align-self: flex-end;">5000</div></div>
+  <div id="scorerow2" class="scorerow"><div id="name2">2.User2</div><div id="score2" style="align-self: flex-end;">3000</div></div>
+  <div id="scorerow3" class="scorerow"><div id="name3">3.User3</div><div id="score3" style="align-self: flex-end;">1000</div></div>
+</div></div>
+
 <div id="hsnameinput" style="display: none;position: absolute; z-index: 101; height: 100vh;user-select: none; width: 100vw;background-color: rgba(0, 0, 0, 0.097);color:white;font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
   <div id="hsnameinputdialog" class="hsbackground" style="position:absolute; width:340px; height:160px;left:34%;top:34%;border-radius: 4px;">
     <div style="display: flex;justify-content: space-between;backdrop-filter: brightness(50%);height: 22px;align-items: center;border-top-right-radius: 4px;border-top-left-radius: 4px;"><div>&nbsp;Enter your Name</div><div class="closebtn"><a onclick="savescore('hsnameinput')">X</a></div></div>
@@ -108,19 +119,19 @@ var newhighscore=0,scoreboardsize=10;
 
 <h1 id="title">Tetris</h1>
 
-<div style="display: flex;justify-content: center;margin-top: 10px;">
+<div style="display: flex;justify-content: center;">
+  <div>
+      <div id="highscore" class="hsbackground">
+        <div class="hstitle" onclick="showhighscore()" onmouseover="mouseover()" onmouseleave="mouseleave()"><div style="margin-left: 4px;">High Score</div><div style="height: 20px;width:25px;"><svg xmlns="http://www.w3.org/2000/svg" id="hscaret" style="filter: invert(100%);margin-right:5px;" width="20px" height="20px" viewBox="0 0 512 512"><path d="M190.06,414,353.18,274.22a24,24,0,0,0,0-36.44L190.06,98c-15.57-13.34-39.62-2.28-39.62,18.22V395.82C150.44,416.32,174.49,427.38,190.06,414Z"/></svg></div></div>
+      </div>
 
-  <div id="highscore" class="hsbackground">
-    <div class="hstitle" onclick="showhighscore()" onmouseover="mouseover()" onmouseleave="mouseleave()"><div style="margin-left: 4px;">High Score</div><div style="height: 20px;width:25px;"><svg xmlns="http://www.w3.org/2000/svg" id="hscaret" style="filter: invert(100%);margin-right:5px;" width="20px" height="20px" viewBox="0 0 512 512"><path d="M190.06,414,353.18,274.22a24,24,0,0,0,0-36.44L190.06,98c-15.57-13.34-39.62-2.28-39.62,18.22V395.82C150.44,416.32,174.49,427.38,190.06,414Z"/></svg></div></div>
-    <div id="scoreboarddisplay" class="hsbackground" style="display: none;height:160px; border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;"><div id="hsscoreboard" style="backdrop-filter: brightness(62.3%) hue-rotate(19deg) sepia(3%);">
-        <div id="scorerow1" class="scorerow"><div id="name1">1.User1</div><div id="score1" style="align-self: flex-end;">5000</div></div>
-        <div id="scorerow2" class="scorerow"><div id="name2">2.User2</div><div id="score2" style="align-self: flex-end;">3000</div></div>
-        <div id="scorerow3" class="scorerow"><div id="name3">3.User3</div><div id="score3" style="align-self: flex-end;">1000</div></div>
-    </div></div>
-    <div style="display: flex;gap: 8px;align-items: center; justify-content: center; margin-top: 8px;">
-      <div><button id="reset" class="btnclass" onclick="reset()">Start</button></div>
-    </div>
+      <div style="display: flex;gap: 8px;align-items: center; justify-content: center; margin-top: 8px;">
+        <div><button id="reset" class="btnclass" onclick="reset()">Start</button></div>
+      </div>
+
   </div>
+
+
 
   <div><div id="gamegrid"> </div></div>
 

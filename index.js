@@ -12,7 +12,7 @@ window.onload=()=>{
 }
 
 function initialize(){
-    document.getElementById(themecode).classList.add("activebtn")
+    document.getElementById(themecode).classList.add("activebtn");
     currentkey="";keycount=10; themegrid=[];
     isStarted=false,isobjectmoving=false;
     resetgridboxsize();createGrid(20,10);
@@ -61,8 +61,12 @@ document.querySelector("body").addEventListener("touchstart",function(event){
 });
 
 document.addEventListener("contextmenu",(e)=>{e.preventDefault();});
+document.getElementById("gamegrid").addEventListener("click",function(e){
+    e.preventDefault(); rotatecw();
+    touchcount=1;
+});
 document.getElementById("gamegrid").addEventListener("touchstart",function(e){
-    e.preventDefault();
+    e.preventDefault(); console.log(e.target.id);
     touchcount=1;
 });
 document.getElementById("gamegrid").addEventListener("touchmove",function(e){
@@ -111,19 +115,22 @@ function resetgridboxsize(){
         size=window.innerWidth; size=Math.floor(size*94/100);
     if(navigator.userAgent.includes("Android") || navigator.userAgent.includes("Mobile")){ 
         console.log(navigator.userAgent)
-        document.getElementById("btnleft").style.width=Math.floor(size*0.77/5)+"px";
-        document.getElementById("btnright").style.width=Math.floor(size*0.77/5)+"px";
-        document.getElementById("btncc").style.width=Math.floor(size*0.77/5)+"px";
-        document.getElementById("btncw").style.width=Math.floor(size*0.77/5)+"px";
-        document.getElementById("btndown").style.width=Math.floor(size*0.77/5)+"px";
-        size=window.innerWidth; size=Math.floor(size*97/100);
+        size=window.innerWidth; //size=Math.floor(size*/100);
+        document.getElementById("btnleft").style.width=Math.floor(size*0.85/5)+"px";
+        document.getElementById("btnright").style.width=Math.floor(size*0.85/5)+"px";
+        document.getElementById("btncc").style.width=Math.floor(size*0.85/5)+"px";
+        document.getElementById("btncw").style.width=Math.floor(size*0.85/5)+"px";
+        document.getElementById("btndown").style.width=Math.floor(size*0.85/5)+"px";
     }
     }else{
-        size=window.innerHeight; size=Math.floor(size*82/100);
+        size=window.innerHeight; size=Math.floor(size*83/100);
     }
 }
 function resizegamebox(){
-    var boxsize=Math.floor(size/20)-2; if(boxsize>44) boxsize=44;
+    var boxsize;
+    if(navigator.userAgent.includes("Android") || navigator.userAgent.includes("Mobile")){ 
+        boxsize=Math.floor(size/16)-2; if(boxsize>50) boxsize=50;
+    }else { boxsize=Math.floor(size/20)-2; if(boxsize>48) boxsize=48; }
 
     document.getElementById("message").style.fontSize=boxsize*2.5+"px"; document.getElementById("message").style.width=boxsize*10+"px";
     document.getElementById("message").style.top=(boxsize*7+document.getElementById("gamegrid").offsetTop*1)+"px";
@@ -134,8 +141,10 @@ function resizegamebox(){
 
 function createGrid(h,w){
     var boxsize;  var row=column="";
-    boxsize=Math.floor(size/h)-2;
-    if(boxsize>44) boxsize=44;
+    
+    if(navigator.userAgent.includes("Android") || navigator.userAgent.includes("Mobile")){ 
+        boxsize=Math.floor(size/16)-2; if(boxsize>58) boxsize=58;
+    }else { boxsize=Math.floor(size/20)-2; if(boxsize>48) boxsize=48; }
 
     var tempstring="<div id='message' style='display:none'>Pause</div>";;
     for(var a=0;a<h;a++){
