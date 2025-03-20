@@ -1,5 +1,5 @@
 var timerid=0,timercount=0,gamespeed;
-var rowcompletestart,rowcompleteend,animatecount; var isrowanimatecomplete;
+var rowcompletestart,rowcompletedlast,animatecount; var isrowanimatecomplete;
 var currenttheme,themecode="All";
 var isStarted,isobjectmoving,nextobject=1,currentobject=1,currentangle,currentrow,currentcolumn;
 var score;
@@ -17,6 +17,27 @@ function initialize(){
     isStarted=false,isobjectmoving=false;
     resetgridboxsize();createGrid(20,10);
 }
+
+
+document.getElementById("floor").addEventListener("touchend",function(event){
+    event.preventDefault();
+});
+document.getElementById("floor").addEventListener("touchmove",function(event){
+    event.preventDefault();
+});
+document.getElementById("floor").addEventListener("dblclick",function(event){
+    event.preventDefault();
+});
+document.getElementById("gamedisplay").addEventListener("touchend",function(event){
+    event.preventDefault();
+});
+document.getElementById("gamedisplay").addEventListener("touchmove",function(event){
+    event.preventDefault();
+});
+document.getElementById("gamedisplay").addEventListener("dblclick",function(event){
+    event.preventDefault();
+});
+
 
 document.getElementById("hsokbtn").addEventListener("touchstart",function(event){
     event.preventDefault(); savescore('hsnameinput');
@@ -121,6 +142,7 @@ function resetgridboxsize(){
         document.getElementById("btncc").style.width=Math.floor(size*0.85/5)+"px";
         document.getElementById("btncw").style.width=Math.floor(size*0.85/5)+"px";
         document.getElementById("btndown").style.width=Math.floor(size*0.85/5)+"px";
+        document.getElementById("floor").style.height=window.innerHeight-document.getElementById("controls").offsetHeight-document.getElementById("controls").offsetTop+"px";
     }
     }else{
         size=window.innerHeight; size=Math.floor(size*83/100);
@@ -647,7 +669,7 @@ function createobject(){
     hidenextobject(nextobject);
     currentobject=nextobject;
     currentangle=1; currentrow=0;currentcolumn=4;
-    nextobject=Math.ceil(Math.random()*8); // nextobject=3; //
+    nextobject=Math.ceil(Math.random()*8); //7; // nextobject=1; // 
     if(themecode==="All") currenttheme=gettheme(Math.ceil(Math.random()*7));
     else currenttheme=themecode;
     shownextobject(nextobject);
@@ -5615,20 +5637,20 @@ function reset(){
     document.getElementById("reset").blur();
 }
 function validategridforscore(){
-    var isrowcomplete=false; rowcompletestart=-1,rowcompleteend;
+    var isrowcomplete=false; rowcompletestart=-1,rowcompletedlast;
     for(var a=19;a>=0;a--){
         if(!isrowcomplete){ isrowcomplete=true; }else{ rowcompletestart=(a+1); break; }
         for(var b=0;b<10;b++){ if(document.getElementById(a+","+b).disabled){ isrowcomplete=false; break; } }
     }
     if(rowcompletestart>-1){
         isrowcomplete=true;
-        rowcompleteend=0;
+        rowcompletedlast=0;
         if(rowcompletestart>0)
         for(var a=(rowcompletestart-1);a>=0;a--){
             if(!isrowcomplete)break;
-                for(var b=0;b<10;b++){ if(document.getElementById(a+","+b).disabled){rowcompleteend=(a+1); isrowcomplete=false; break; } }
+                for(var b=0;b<10;b++){ if(document.getElementById(a+","+b).disabled){rowcompletedlast=(a+1); isrowcomplete=false; break; } }
         }
-        
+        console.log(rowcompletestart+":"+rowcompletedlast)
         isrowanimatecomplete=false; animatecount=4;
         setTimeout(() => {
             animaterow();
@@ -5637,9 +5659,9 @@ function validategridforscore(){
 }
 
 function gridrefresh(){
-    rowcompleteend--;
-    if(rowcompleteend>=0){
-        for(var a=rowcompleteend;a>=0;a--){
+    rowcompletedlast--;
+    if(rowcompletedlast>=0){
+        for(var a=rowcompletedlast;a>=0;a--){
             for(var b=0;b<10;b++){
                 document.getElementById(rowcompletestart+","+b).disabled=document.getElementById(a+","+b).disabled;
                 if(document.getElementById(a+","+b).disabled){
@@ -5677,7 +5699,7 @@ function extracttheme(w,h){
 
 function animaterow(){
     if(animatecount>=0){
-        for(var a=rowcompletestart;a>=rowcompleteend;a--){
+        for(var a=rowcompletestart;a>=rowcompletedlast;a--){
                 removetheme(a,animatecount);
                 if(animatecount===4){document.getElementById(a+","+(animatecount+1)).disabled=true;removetheme(a,(animatecount+1));themegrid[a][animatecount+1]="";} 
                 else if(animatecount===3){document.getElementById(a+","+(animatecount+3)).disabled=true; removetheme(a,(animatecount+3));themegrid[a][animatecount+3]="";}
@@ -5687,7 +5709,7 @@ function animaterow(){
                 document.getElementById(a+","+animatecount).disabled=true;
                 themegrid[a][animatecount]="";
         }
-        score+=animatecount*(rowcompletestart-rowcompleteend+1);
+        score+=animatecount*(rowcompletestart-rowcompletedlast+1);
         document.getElementById("score").innerText=score;
         animatecount--;
         setTimeout(() => {
